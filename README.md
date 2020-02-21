@@ -1,1 +1,0 @@
-QAP_EGA_pre

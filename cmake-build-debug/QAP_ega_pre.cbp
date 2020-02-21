@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="QAP_ega_pre"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="QAP_ega_pre">
+				<Option output="/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug/QAP_ega_pre" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/8"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/8"/>
+					<Add directory="/usr/include/c++/8/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug/Makefile&quot;  VERBOSE=1 QAP_ega_pre"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="QAP_ega_pre/fast">
+				<Option output="/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug/QAP_ega_pre" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/8"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/8"/>
+					<Add directory="/usr/include/c++/8/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug/Makefile&quot;  VERBOSE=1 QAP_ega_pre/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/augustinmay/CLionProjects/QAP_ega_pre/crossover.cpp">
+			<Option target="QAP_ega_pre"/>
+		</Unit>
+		<Unit filename="/home/augustinmay/CLionProjects/QAP_ega_pre/crossover.h">
+			<Option target="QAP_ega_pre"/>
+		</Unit>
+		<Unit filename="/home/augustinmay/CLionProjects/QAP_ega_pre/main.cpp">
+			<Option target="QAP_ega_pre"/>
+		</Unit>
+		<Unit filename="/home/augustinmay/CLionProjects/QAP_ega_pre/mutation.cpp">
+			<Option target="QAP_ega_pre"/>
+		</Unit>
+		<Unit filename="/home/augustinmay/CLionProjects/QAP_ega_pre/mutation.h">
+			<Option target="QAP_ega_pre"/>
+		</Unit>
+		<Unit filename="/home/augustinmay/CLionProjects/QAP_ega_pre/procreator_choice.cpp">
+			<Option target="QAP_ega_pre"/>
+		</Unit>
+		<Unit filename="/home/augustinmay/CLionProjects/QAP_ega_pre/procreator_choice.h">
+			<Option target="QAP_ega_pre"/>
+		</Unit>
+		<Unit filename="/home/augustinmay/CLionProjects/QAP_ega_pre/progeny.cpp">
+			<Option target="QAP_ega_pre"/>
+		</Unit>
+		<Unit filename="/home/augustinmay/CLionProjects/QAP_ega_pre/progeny.h">
+			<Option target="QAP_ega_pre"/>
+		</Unit>
+		<Unit filename="/home/augustinmay/CLionProjects/QAP_ega_pre/selection.cpp">
+			<Option target="QAP_ega_pre"/>
+		</Unit>
+		<Unit filename="/home/augustinmay/CLionProjects/QAP_ega_pre/selection.h">
+			<Option target="QAP_ega_pre"/>
+		</Unit>
+		<Unit filename="/home/augustinmay/CLionProjects/QAP_ega_pre/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
