@@ -16,7 +16,7 @@ int main() {
     ifstream W_inp("Wires"), D_inp("Distance");
     srand(time(NULL));
     int QAP_size, pop_size, procreator_pairs_num, B, max_stop_cond_val,
-    global_ind, num_of_iterations=1, mut_rand, best_ind, tmp_selec;
+            global_ind, num_of_iterations=1, mut_rand, best_ind, tmp_selec;
     bool emergency_stop=false, utopy= false, utopy_comb_cond= false;
     cout<<"Enter the size of the QAP: ";
     cin>>QAP_size;
@@ -30,6 +30,10 @@ int main() {
             D_inp>>D[i][j];
         }
     }
+    cout<<"TEST"<<endl;
+    int sol_ar[12]={2,9,10,1,11,4,5,6,7,0,3,8};
+    progeny sol_pro=*new progeny(0, 12, sol_ar, W, D);
+    sol_pro.show_gen();
     cout<<"Here is the W (wires) matrix: "<<endl;
     for(int i=0; i<QAP_size; i++){
         for(int j=0; j<QAP_size; j++){
@@ -73,7 +77,7 @@ int main() {
     }
     progeny *ch=new progeny[procreator_pairs_num*2];
     cout<<"There are now "<<procreator_pairs_num<<" pairs of procreators, and "<<procreator_pairs_num*2<<
-    " possible children. Procreators are chosen randomly.\nNow enter the g coefficient (0;1] to choose the number of procreators which will be replaced by the progenies: "<<endl;
+        " possible children. Procreators are chosen randomly.\nNow enter the g coefficient (0;1] to choose the number of procreators which will be replaced by the progenies: "<<endl;
     while(true){
         cin>>G_coef;
         if(G_coef<=0||G_coef>1){
@@ -209,5 +213,6 @@ int main() {
     delete[] ch;
     delete[] W;
     delete[] D;
+    return 0;
     return 0;
 }
