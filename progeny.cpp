@@ -50,7 +50,7 @@ void progeny::tot_cost_cnt(double **W, double **D) {
     double tmp=0;
     for(int i=0; i<size; i++){
         for(int j=0;j<size; j++){
-            tmp+=(W[gen[i]][gen[j]]*D[i][j]);
+            tmp+=(W[i][j]*D[gen[i]][gen[j]]);
         }
     }
     this->tot_cost=tmp;
