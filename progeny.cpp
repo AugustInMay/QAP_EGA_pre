@@ -112,6 +112,15 @@ double progeny::get_cost() {
     return tot_cost;
 }
 
+std::string progeny::ret_str_gen() {
+    string tmp="";
+    for(int i=0; i<size; i++){
+        tmp+=to_string(gen[i]+1);
+        tmp+=" ";
+    }
+    return tmp;
+}
+
 int& progeny::operator[](int x){
     return gen[x];
 }

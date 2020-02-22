@@ -15,7 +15,7 @@ int factorial(int i){
 int main() {
     ifstream W_inp("Wires"), D_inp("Distance");
     srand(time(NULL));
-    int QAP_size, pop_size[3], procreator_pairs_num, B, max_stop_cond_val,
+    int QAP_size, pop_size, procreator_pairs_num, B, max_stop_cond_val,
     global_ind, num_of_iterations=1, mut_rand, best_ind, tmp_selec;
     bool emergency_stop=false, utopy= false, utopy_comb_cond= false;
     cout<<"Enter the size of the QAP: ";

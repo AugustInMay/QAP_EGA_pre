@@ -46,13 +46,14 @@ void utopy_comb(progeny *ch, int size_of_ch, progeny *pop, int size_of_pop){
     for(int i=0; i<size_of_ch; i++){
         tmp[i]=*new progeny(ch[i]);
     }
-    for(int i=size_of_ch; i<size_of_pop; i++){
-        tmp[i]=*new progeny(pop[i]);
+    for(int i=size_of_ch; i<size_of_pop+size_of_ch; i++){
+        tmp[i]=*new progeny(pop[i-size_of_ch]);
     }
     tmp->bubblesort(tmp, size_of_ch+size_of_pop);
     for(int i=0; i<size_of_pop; i++){
-        pop[i]=*new progeny(tmp[i]);
+        pop[i]=*new progeny(tmp[size_of_ch+size_of_pop-i-1]);
     }
+    delete[] tmp;
 }
 
 void overlap(int ov_num, progeny *pop, int size_of_pop, progeny *pot, progeny *ch, int size_of_ch, int B, bool utopy, bool utopy_comb_cond){

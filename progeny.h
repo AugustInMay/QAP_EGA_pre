@@ -5,6 +5,7 @@
 #ifndef QAP_EGA_PRE_PROGENY_H
 #define QAP_EGA_PRE_PROGENY_H
 
+#include <string>
 
 class progeny {
     int generation;
@@ -29,6 +30,7 @@ public:
     int get_generation();
     void swap(progeny &p1, progeny &p2);
     void bubblesort(progeny *p, int pop_size);
+    std::string ret_str_gen();
 };
 
 
