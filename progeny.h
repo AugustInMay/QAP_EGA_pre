@@ -33,5 +33,18 @@ public:
     std::string ret_str_gen();
 };
 
+class mask{
+    int generation;
+    int size;
+    bool *gen;
+public:
+    mask(void);
+    mask(int g, int s, bool *gen, bool first);
+    ~mask(void);
 
+    bool& operator[] (int x);
+    bool operator==(const mask &r);
+
+    progeny ch_prog(progeny inp, double **W, double **D);
+};
 #endif //QAP_EGA_PRE_PROGENY_H
