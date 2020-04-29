@@ -79,8 +79,8 @@ void OX_crossover(progeny *par, progeny *ch, int size, double **W, double **D){
         was1=false;
         was2=false;
     }
-    ch[0]=*new progeny(par[0].get_generation()+1, size, tmp1, W, D);
-    ch[1]=*new progeny(par[1].get_generation()+1, size, tmp2, W, D);
+    ch[0]=progeny(par[0].get_generation()+1, size, tmp1, W, D);
+    ch[1]=progeny(par[1].get_generation()+1, size, tmp2, W, D);
     delete[] tmp1;
     delete[] tmp2;
 }
@@ -134,8 +134,8 @@ void PMX_crossover(progeny *par, progeny *ch, int size, double **W, double **D){
             }
         }
     }
-    ch[0]=*new progeny(par[0].get_generation()+1, size, tmp1, W, D);
-    ch[1]=*new progeny(par[1].get_generation()+1, size, tmp2, W, D);
+    ch[0]=progeny(par[0].get_generation()+1, size, tmp1, W, D);
+    ch[1]=progeny(par[1].get_generation()+1, size, tmp2, W, D);
     delete[] tmp1;
     delete[] tmp2;
 }
@@ -146,5 +146,43 @@ void crossover(progeny *par, progeny *ch, int size, double **W, double **D, bool
     }
     else{
         PMX_crossover(par, ch, size, W, D);
+    }
+}
+
+void mask_crossover(mask *par, mask *ch, int size){
+    int disclude=par[0].first_same_indx(par[1]);
+    int gener=par[0].get_generation();
+    if(disclude!=-1){
+        bool *tmp=new bool[size];
+        for(int j=0; j<size; j++){
+            if(j!=disclude){
+                tmp[j]=(par[0][j]||par[1][j]);
+            }
+        }
+        ch[0]=mask(gener, size, tmp, false);
+        delete[] tmp;
+    }
+    else{
+        bool *tmp1=new bool[size];
+        bool *tmp2=new bool[size];
+        for(int i=0; i<2; i++){
+            bool *tmp=new bool[size];
+            for(int j=0; j<size; j++){
+                tmp[j]=false;
+                if(i==0){
+                    tmp1[j]=false;
+                    tmp2[j]=false;
+                }
+            }
+            tmp1[par[i].first_ind()]=true;
+            tmp2[par[i].second_ind()]=true;
+            tmp[par[i%2].first_ind()]=true;
+            tmp[par[(i+1)%2].second_ind()]=true;
+            ch[i]=mask(gener, size, tmp);
+        }
+        ch[2]=mask(gener, size, tmp1);
+        ch[3]=mask(gener, size, tmp2);
+        delete[] tmp1;
+        delete[] tmp2;
     }
 }

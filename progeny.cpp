@@ -89,12 +89,33 @@ void progeny::bubblesort(progeny *p, int pop_size) {
     }
 }
 
+void mask::bubblesort(mask *p, int pop_size, progeny sol, double **W, double**D){
+    for(int i=0; i<pop_size; i++){
+        int left=pop_size-i;
+        for(int j=0; j<left-1; j++){
+            if(p[j].get_cost(sol, W, D)<p[j+1].get_cost(sol, W, D)){
+                p->swap(p[j], p[j+1]);
+            }
+        }
+    }
+}
+
 void progeny::swap(progeny &p1, progeny &p2){
-    progeny tmp=*new progeny(p1);
+    progeny tmp(p1);
     p1.tot_cost=p2.tot_cost;
     p1.generation=p2.generation;
     p1.size=p2.size;
     p2.tot_cost=tmp.tot_cost;
+    p2.generation=tmp.generation;
+    p2.size=tmp.size;
+    copy(p2.gen, p2.gen+p2.size, p1.gen);
+    copy(tmp.gen, tmp.gen+tmp.size, p2.gen);
+}
+
+void mask::swap(mask &p1, mask &p2){
+    mask tmp(p1);
+    p1.generation=p2.generation;
+    p1.size=p2.size;
     p2.generation=tmp.generation;
     p2.size=tmp.size;
     copy(p2.gen, p2.gen+p2.size, p1.gen);
@@ -119,6 +140,10 @@ std::string progeny::ret_str_gen() {
 }
 
 int& progeny::operator[](int x){
+    return gen[x];
+}
+
+bool& mask::operator[](int x){
     return gen[x];
 }
 
@@ -149,7 +174,9 @@ mask::mask() {
     gen=new bool[3];
 }
 
-mask::mask(int g, int s, bool *gen, bool first):generation(g), size(s){
+mask::mask(int g, int s, bool *gen, bool first){
+    this->generation=g;
+    this->size=s;
     this->gen=new bool[size];
     if(first){
         int tmp1=rand()%size;
@@ -170,14 +197,6 @@ mask::mask(int g, int s, bool *gen, bool first):generation(g), size(s){
     }
 }
 
-mask::~mask(void) {
-    delete[] gen;
-}
-
-bool& mask::operator[](int x){
-    return gen[x];
-}
-
 bool mask::operator==(const mask &r) {
     if(this->size==r.size){
         for(int i=0; i<this->size; i++){
@@ -191,23 +210,98 @@ bool mask::operator==(const mask &r) {
         return false;
     }
 }
+
 progeny mask::ch_prog(progeny inp, double **W, double **D){
     bool first=true;
     int tmp1,tmp2;
     for(int i=0; i<size; i++){
-        if(inp[i]&&first){
+        if(gen[i]&&first){
             tmp1=i;
             first= false;
         }
-        if(inp[i]){
+        if(gen[i]){
             tmp2=i;
             if(tmp1!=tmp2){
                 break;
             }
         }
     }
-    progeny ret=inp;
+    progeny ret(inp);
     ret[tmp1]=inp[tmp2];
     ret[tmp2]=inp[tmp1];
+    ret.tot_cost_cnt(W,D);
     return ret;
+}
+
+std::string mask::ret_str_gen() {
+    string tmp="";
+    for(int i=0; i<size; i++){
+        if(!gen[i]){
+            tmp+="0";
+        }
+        else{
+            tmp+="1";
+        }
+    }
+    return tmp;
+}
+
+int mask::first_same_indx(mask inp){
+    for(int i=0; i<size; i++){
+        if(gen[i]&&inp[i]){
+            return i;
+        }
+    }
+    return -1;
+}
+
+int mask::first_ind(){
+    int i=0;
+    while(!gen[i]){
+        i++;
+    }
+    return i;
+}
+
+int mask::second_ind(){
+    int i=this->first_ind()+1;
+    while(!gen[i]){
+        i++;
+    }
+    return i;
+}
+
+double mask::get_cost(progeny inp, double **W, double **D){
+    progeny ch(ch_prog(inp, W, D));
+    double cost=ch.get_cost();
+    return cost;
+}
+
+mask::mask(const mask &m_cop){
+    this->generation=m_cop.generation;
+    this->size=m_cop.size;
+    this->gen=new bool[size];
+    for(int i=0; i<size; i++){
+        this->gen[i]=m_cop.gen[i];
+    }
+}
+
+progeny& progeny::operator=(const progeny &p_){
+    this->generation=p_.generation;
+    this->size=p_.size;
+    this->tot_cost=p_.tot_cost;
+    gen=new int[size];
+    for(int i=0; i<size; i++){
+        gen[i]=p_.gen[i];
+    }
+    return *this;
+}
+mask& mask::operator=(const mask &m_){
+    this->generation=m_.generation;
+    this->size=m_.size;
+    gen=new bool[size];
+    for(int i=0; i<size; i++){
+        gen[i]=m_.gen[i];
+    }
+    return *this;
 }
