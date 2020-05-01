@@ -159,7 +159,7 @@ void mask_crossover(mask *par, mask *ch, int size){
                 tmp[j]=(par[0][j]||par[1][j]);
             }
         }
-        ch[0]=mask(gener, size, tmp, false);
+        ch[0]=mask(gener, size, tmp);
         delete[] tmp;
     }
     else{
@@ -174,11 +174,13 @@ void mask_crossover(mask *par, mask *ch, int size){
                     tmp2[j]=false;
                 }
             }
-            tmp1[par[i].first_ind()]=true;
-            tmp2[par[i].second_ind()]=true;
+            int first=par[i].first_ind();
+            tmp1[first]=true;
+            tmp2[par[i].second_ind(first)]=true;
             tmp[par[i%2].first_ind()]=true;
-            tmp[par[(i+1)%2].second_ind()]=true;
+            tmp[par[(i+1)%2].second_ind(-1)]=true;
             ch[i]=mask(gener, size, tmp);
+            delete[] tmp;
         }
         ch[2]=mask(gener, size, tmp1);
         ch[3]=mask(gener, size, tmp2);

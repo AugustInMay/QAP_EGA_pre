@@ -46,6 +46,10 @@ progeny::~progeny(void) {
     delete[] gen;
 }
 
+mask::~mask(void){
+    delete[] gen;
+}
+
 void progeny::tot_cost_cnt(double **W, double **D) {
     double tmp=0;
     for(int i=0; i<size; i++){
@@ -113,7 +117,8 @@ void progeny::swap(progeny &p1, progeny &p2){
 }
 
 void mask::swap(mask &p1, mask &p2){
-    mask tmp(p1);
+    mask tmp;
+    tmp=p1;
     p1.generation=p2.generation;
     p1.size=p2.size;
     p2.generation=tmp.generation;
@@ -211,26 +216,28 @@ bool mask::operator==(const mask &r) {
     }
 }
 
-progeny mask::ch_prog(progeny inp, double **W, double **D){
-    bool first=true;
-    int tmp1,tmp2;
+void progeny::ch_cost_mask(int tmp1, int tmp2, double **W, double **D){
+    double tmp_cost=tot_cost;
     for(int i=0; i<size; i++){
-        if(gen[i]&&first){
-            tmp1=i;
-            first= false;
-        }
-        if(gen[i]){
-            tmp2=i;
-            if(tmp1!=tmp2){
-                break;
-            }
+        tmp_cost-=W[tmp1][i]*D[gen[tmp1]][gen[i]];
+        tmp_cost-=W[tmp2][i]*D[gen[tmp2]][gen[i]];
+        if(i!=tmp1&&i!=tmp2){
+            tmp_cost-=W[i][tmp1]*D[gen[i]][gen[tmp1]];
+            tmp_cost-=W[i][tmp2]*D[gen[i]][gen[tmp2]];
         }
     }
-    progeny ret(inp);
-    ret[tmp1]=inp[tmp2];
-    ret[tmp2]=inp[tmp1];
-    ret.tot_cost_cnt(W,D);
-    return ret;
+    int tmp=gen[tmp1];
+    gen[tmp1]=gen[tmp2];
+    gen[tmp2]=tmp;
+    for(int i=0; i<size; i++){
+        tmp_cost+=W[tmp1][i]*D[gen[tmp1]][gen[i]];
+        tmp_cost+=W[tmp2][i]*D[gen[tmp2]][gen[i]];
+        if(i!=tmp1&&i!=tmp2){
+            tmp_cost+=W[i][tmp1]*D[gen[i]][gen[tmp1]];
+            tmp_cost+=W[i][tmp2]*D[gen[i]][gen[tmp2]];
+        }
+    }
+    tot_cost=tmp_cost;
 }
 
 std::string mask::ret_str_gen() {
@@ -263,8 +270,14 @@ int mask::first_ind(){
     return i;
 }
 
-int mask::second_ind(){
-    int i=this->first_ind()+1;
+int mask::second_ind(int first){
+    int i;
+    if(first!=-1){
+        i=first+1;
+    }
+    else{
+        i=this->first_ind()+1;
+    }
     while(!gen[i]){
         i++;
     }
@@ -272,8 +285,10 @@ int mask::second_ind(){
 }
 
 double mask::get_cost(progeny inp, double **W, double **D){
-    progeny ch(ch_prog(inp, W, D));
-    double cost=ch.get_cost();
+    progeny tmp(inp);
+    int first=this->first_ind();
+    tmp.ch_cost_mask(first, this->second_ind(first), W, D);
+    double cost=tmp.get_cost();
     return cost;
 }
 
@@ -281,7 +296,7 @@ mask::mask(const mask &m_cop){
     this->generation=m_cop.generation;
     this->size=m_cop.size;
     this->gen=new bool[size];
-    for(int i=0; i<size; i++){
+    for(int i=0; i<this->size; i++){
         this->gen[i]=m_cop.gen[i];
     }
 }
@@ -290,18 +305,20 @@ progeny& progeny::operator=(const progeny &p_){
     this->generation=p_.generation;
     this->size=p_.size;
     this->tot_cost=p_.tot_cost;
-    gen=new int[size];
+    delete[] this->gen;
+    this->gen=new int[size];
     for(int i=0; i<size; i++){
-        gen[i]=p_.gen[i];
+        this->gen[i]=p_.gen[i];
     }
     return *this;
 }
 mask& mask::operator=(const mask &m_){
     this->generation=m_.generation;
     this->size=m_.size;
-    gen=new bool[size];
+    delete[] this->gen;
+    this->gen=new bool[size];
     for(int i=0; i<size; i++){
-        gen[i]=m_.gen[i];
+        this->gen[i]=m_.gen[i];
     }
     return *this;
 }

@@ -17,6 +17,7 @@ void rand_ch(progeny *pop, int size_of_pop, int size_of_gen, progeny *par, doubl
         emerg_exit++;
         if(emerg_exit==size_of_pop*5){
             *emerg_stop=true;
+            delete[] tmp_ar;
             return;
         }
     }
@@ -26,7 +27,7 @@ void rand_ch(progeny *pop, int size_of_pop, int size_of_gen, progeny *par, doubl
     par[1]=progeny(pop[tmp].get_generation(), size_of_gen, tmp_ar, W, D);
     delete[] tmp_ar;
 }
-void rand_ch(mask *pop, int size_of_pop, int size_of_gen, mask *par, double **W, double **D, bool *emerg_stop){
+void rand_ch(mask *pop, int size_of_pop, mask *par, bool *emerg_stop){
     int tmp=rand()%size_of_pop, emerg_exit=0;
     par[0]=pop[tmp];
     tmp=rand()%size_of_pop;
@@ -38,7 +39,7 @@ void rand_ch(mask *pop, int size_of_pop, int size_of_gen, mask *par, double **W,
             return;
         }
     }
-    par[1]=mask(pop[tmp]);
+    par[1]=pop[tmp];
 }
 void assort_plus(progeny *pop, int size_of_pop, int size_of_gen, progeny *par, double **W, double **D, bool *emerg){
     double *ver=new double[size_of_pop];
@@ -77,6 +78,9 @@ void assort_plus(progeny *pop, int size_of_pop, int size_of_gen, progeny *par, d
                 emerg_exit++;
                 if(emerg_exit==size_of_pop*10){
                     *emerg=true;
+                    delete[] ver;
+                    delete[] tmp_ar1;
+                    delete[] tmp_ar2;
                     return;
                 }
                 i=0;
@@ -126,6 +130,9 @@ void assort_plus(mask *pop, int size_of_pop, int size_of_gen, mask *par, progeny
                 emerg_exit++;
                 if(emerg_exit==size_of_pop*10){
                     *emerg=true;
+                    delete[] ver;
+                    delete[] tmp_ar1;
+                    delete[] tmp_ar2;
                     return;
                 }
                 i=0;
@@ -181,6 +188,10 @@ void assort_minus(progeny *pop, int size_of_pop, int size_of_gen, progeny *par, 
                 emerg_exit++;
                 if(emerg_exit==size_of_pop*10){
                     *emerg=true;
+                    delete[] ver1;
+                    delete[] ver2;
+                    delete[] tmp_ar1;
+                    delete[] tmp_ar2;
                     return;
                 }
                 i=0;
@@ -237,6 +248,10 @@ void assort_minus(mask *pop, int size_of_pop, int size_of_gen, mask *par, progen
                 emerg_exit++;
                 if(emerg_exit==size_of_pop*10){
                     *emerg=true;
+                    delete[] ver1;
+                    delete[] ver2;
+                    delete[] tmp_ar1;
+                    delete[] tmp_ar2;
                     return;
                 }
                 i=0;

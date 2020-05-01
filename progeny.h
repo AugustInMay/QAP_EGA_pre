@@ -33,6 +33,7 @@ public:
     void swap(progeny &p1, progeny &p2);
     void bubblesort(progeny *p, int pop_size);
     std::string ret_str_gen();
+    void ch_cost_mask(int tmp1, int tmp2, double **W, double **D);
 };
 
 class mask:public progeny{
@@ -42,15 +43,15 @@ public:
     mask(int g, int s, bool *gen, bool first);
     mask(int g, int s, bool *gen):mask(g,s,gen, false){};
     mask(const mask &m_cop);
+    ~mask(void);
 
     bool operator==(const mask &r);
     mask& operator=(const mask &m_);
     bool& operator[] (int x);
 
-    progeny ch_prog(progeny inp, double **W, double **D);
     int first_same_indx(mask inp);
     int first_ind();
-    int second_ind();
+    int second_ind(int first);
     void bubblesort(mask *p, int pop_size, progeny sol, double **W, double**D);
     void swap(mask &p1, mask &p2);
     std::string ret_str_gen();
