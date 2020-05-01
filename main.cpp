@@ -5,23 +5,25 @@
 #include "crossover.h"
 #include "procreator_choice.h"
 #include "mutation.h"
+#include "float.h"
+#include "matplotlib-cpp-master/matplotlibcpp.h"
+
+namespace plt = matplotlibcpp;
 using namespace std;
 
-int factorial(int i){
-    if (i==0) return 1;
-    else return i*factorial(i-1);
-}
-
 int main() {
-    ifstream W_inp("Wires"), D_inp("Distance");
-    ofstream outdata, out_add_data;
-    outdata.open("Table1.csv");
-    outdata<<"Configuration"<<";"<<"Iteration"<<";"<<"The initial best way"<<";"<<"Its distance"<<";"<<"The best way after algorithm"<<";"<<"Its distance"<<endl;
+    ifstream W_inp("Tai30a_W"), D_inp("Tai30a_D");
+    ofstream outdata;
+    outdata.open("Table_t_.csv");
+    outdata<<"Configuration"<<";"<<"Iteration"<<";"<<"The initial way"<<";"<<"Its distance"<<";"<<"The best way after algorithm"<<";"<<"Its distance"<<endl;
     srand(time(NULL));
-    int QAP_size=12, pop_size[3]={10, 20, 50}, procreator_pairs_num[3], B[3], max_stop_cond_val[3]={10, 50, 100},
-            global_ind, num_of_iterations=1, mut_rand, best_ind;
-    bool emergency_stop=false, utopy[2]={false, true}, utopy_comb_cond[2]={false, true};
-    double **W=new double*[QAP_size], **D=new double*[QAP_size], G_coef[3]={0.3, 0.4, 0.5}, mut_percent=0.1;
+    int QAP_size=30, pop_size=100, no_change=0, no_change_max=100,
+    procreator_pairs_num[3]={pop_size/3, pop_size/2, pop_size},best_ind, B[3], sel_case[4]={1,2,3,4}, global_ind;
+    double **W=new double*[QAP_size], **D=new double*[QAP_size];
+    string sel_meth[4]={"B", "UT", "UT-C", "R"}, cros_str[2]={"OX","PMX"};
+    bool cros_b[2]={true, false};
+    double G_coef[4]={0.1, 0.2, 0.3, 0.5};
+    vector<double> x,y;
     for(int i=0; i<QAP_size; i++){
         W[i]=new double[QAP_size];
         D[i]=new double[QAP_size];
@@ -30,241 +32,124 @@ int main() {
             D_inp>>D[i][j];
         }
     }
-    for(int ut_ind=0; ut_ind<2; ut_ind++){
-        for(int ut_ind_comb=0; ut_ind_comb<2; ut_ind_comb++){
-            for(int pop_size_ind=0; pop_size_ind<3; pop_size_ind++){
-                procreator_pairs_num[0]=pop_size[pop_size_ind]/3;
-                procreator_pairs_num[1]=pop_size[pop_size_ind]/2;
-                procreator_pairs_num[2]=pop_size[pop_size_ind];
-                for(int proc_ind=0; proc_ind<3; proc_ind++){
-                    for(int stop_ind=0; stop_ind<3; stop_ind++){
-                        for(int G_ind=0; G_ind<3; G_ind++){
-                                if (!utopy[ut_ind]) {
-                                    B[0]=2;
-                                    B[1]=procreator_pairs_num[proc_ind]/1.5;
-                                    B[2]=procreator_pairs_num[proc_ind];
-                                    for(int B_ind=0; B_ind<3; B_ind++) {
-                                        for (int iter_rep = 0; iter_rep < 3; iter_rep++) {
-                                            progeny *reprod = new progeny[overlap_num(G_coef[G_ind],
-                                                                                      pop_size[pop_size_ind])];
-                                            progeny *population = new progeny[pop_size[pop_size_ind]];
-                                            for (int i = 0; i < pop_size[pop_size_ind]; i++) {
-                                                population[i] = *new progeny(0, QAP_size, NULL, true, W, D);
-                                                for (int j = 0; j < i; j++) {
-                                                    if (population[j] == population[i]) {
-                                                        i--;
-                                                        continue;
-                                                    }
-                                                }
-                                            }
-                                            progeny *ch = new progeny[procreator_pairs_num[proc_ind] * 2];
-                                            cout << "\n\n-----The 0 generation-----" << endl;
-                                            double ret = 100000;
-                                            population->bubblesort(population, pop_size[pop_size_ind]);
-                                            for (int i = 0; i < pop_size[pop_size_ind]; i++) {
-                                                population[i].show_gen();
-                                                if (population[i].get_cost() <= ret) {
-                                                    ret = population[i].get_cost();
-                                                    global_ind = i;
-                                                }
-                                            }
-                                            outdata << "SL-B B-" << B[B_ind] << " PS-" << pop_size[pop_size_ind]
-                                                    << " PR-"
-                                                    << procreator_pairs_num[proc_ind]
-                                                    << " SV-" << max_stop_cond_val[stop_ind] << " GI-" << G_coef[G_ind]
-                                                    << ";" << iter_rep + 1 << ";";
-                                            progeny par_per_it[2], ch_per_it[2], solution = *new progeny(
-                                                    population[global_ind]);
-                                            outdata << solution.ret_str_gen() << ";" << solution.get_cost() << ";";
-                                            cout << "The global solution is:" << endl;
-                                            solution.show_gen();
-                                            cout << "And the decoded version is:" << endl;
-                                            solution.show_decode_gen();
-                                            while (true) {
-                                                cout << "\n\n-----The " << num_of_iterations << " generation-----"
-                                                     << endl;
-                                                num_of_iterations++;
-                                                int j = 0;
-                                                for (int i = 0; i < procreator_pairs_num[proc_ind]; i++) {
-                                                    rand_ch(population, pop_size[pop_size_ind], QAP_size, par_per_it, W,
-                                                            D,
-                                                            &emergency_stop);
-                                                    if (emergency_stop) {
-                                                        goto Finished;
-                                                    }
-                                                    OX_crossover(par_per_it, ch_per_it, QAP_size, W, D);
-                                                    ch[j] = *new progeny(ch_per_it[0]);
-                                                    ch[j + 1] = *new progeny(ch_per_it[1]);
-                                                    j += 2;
-                                                }
-                                                cout << "\n\nCreated children:" << endl;
-                                                ch->bubblesort(ch, procreator_pairs_num[proc_ind] * 2);
-                                                for (int i = 0; i < procreator_pairs_num[proc_ind] * 2; i++) {
-                                                    ch[i].show_gen();
-                                                }
-                                                for (int i = 0; i < procreator_pairs_num[proc_ind] * 2; i++) {
-                                                    mut_rand = rand() % 101;
-                                                    if (mut_rand <= int(mut_percent * 100)) {
-                                                        cout << "Mutation occured!!!" << endl;
-                                                        ch[i].show_gen();
-                                                        cout << "Changed to..." << endl;
-                                                        dot_mut(ch[i], QAP_size, W, D);
-                                                        ch[i].show_gen();
-                                                    }
-                                                }
-                                                overlap(overlap_num(G_coef[G_ind], pop_size[pop_size_ind]), population,
-                                                        pop_size[pop_size_ind], reprod, ch,
-                                                        procreator_pairs_num[proc_ind] * 2,
-                                                        B[B_ind], false, false);
-                                                double ret = 100000;
-                                                cout << "\n!!!The new generation is:" << endl;
-                                                population->bubblesort(population, pop_size[pop_size_ind]);
-                                                for (int i = 0; i < pop_size[pop_size_ind]; i++) {
-                                                    population[i].show_gen();
-                                                    if (population[i].get_cost() <= ret) {
-                                                        ret = population[i].get_cost();
-                                                        best_ind = i;
-                                                    }
-                                                }
-                                                if (solution.get_cost() > population[best_ind].get_cost()) {
-                                                    solution = *new progeny(population[best_ind]);
-                                                }
-                                                cout << "\n!!!The best in generation is:" << endl;
-                                                population[best_ind].show_gen();
-                                                if (num_of_iterations == (max_stop_cond_val[stop_ind] + 1)) {
-                                                    break;
-                                                }
-
-                                            }
-                                            Finished:
-                                            emergency_stop = false;
-                                            outdata << solution.ret_str_gen() << ";" << solution.get_cost() << endl;
-                                            cout << "\n\n-----The best solution is:" << endl;
-                                            solution.show_gen();
-                                            cout << "And the decoded version is:" << endl;
-                                            num_of_iterations = 1;
-                                            solution.show_decode_gen();
-                                            delete[] reprod;
-                                            delete[] population;
-                                            delete[] ch;
-                                        }
-                                    }
-                                }
-                                else {
-                                    for (int iter_rep = 0; iter_rep < 3; iter_rep++) {
-                                        progeny *reprod = new progeny[overlap_num(G_coef[G_ind],
-                                                                                  pop_size[pop_size_ind])];
-                                        progeny *population = new progeny[pop_size[pop_size_ind]];
-                                        for (int i = 0; i < pop_size[pop_size_ind]; i++) {
-                                            population[i] = *new progeny(0, QAP_size, NULL, true, W, D);
-                                            for (int j = 0; j < i; j++) {
-                                                if (population[j] == population[i]) {
-                                                    i--;
-                                                    continue;
-                                                }
-                                            }
-                                        }
-                                        progeny *ch = new progeny[procreator_pairs_num[proc_ind] * 2];
-                                        cout << "\n\n-----The 0 generation-----" << endl;
-                                        double ret = 100000;
-                                        population->bubblesort(population, pop_size[pop_size_ind]);
-                                        for (int i = 0; i < pop_size[pop_size_ind]; i++) {
-                                            population[i].show_gen();
-                                            if (population[i].get_cost() <= ret) {
-                                                ret = population[i].get_cost();
-                                                global_ind = i;
-                                            }
-                                        }
-                                        if (ut_ind && !ut_ind_comb) {
-                                            outdata << "SL-UT PS-" << pop_size[pop_size_ind] << " PR-"
-                                                    << procreator_pairs_num[proc_ind]
-                                                    << " SV-" << max_stop_cond_val[stop_ind] << " GI-" << G_coef[G_ind]
-                                                    << ";" << iter_rep + 1 << ";";
-                                        } else {
-                                            outdata << "SL-UTC PS-" << pop_size[pop_size_ind] << " PR-"
-                                                    << procreator_pairs_num[proc_ind]
-                                                    << " SV-" << max_stop_cond_val[stop_ind] << " GI-" << G_coef[G_ind]
-                                                    << ";" << iter_rep + 1 << ";";
-                                        }
-                                        progeny par_per_it[2], ch_per_it[2], solution = *new progeny(
-                                                population[global_ind]);
-                                        outdata << solution.ret_str_gen() << ";" << solution.get_cost() << ";";
-                                        cout << "The global solution is:" << endl;
-                                        solution.show_gen();
-                                        cout << "And the decoded version is:" << endl;
-                                        solution.show_decode_gen();
-                                        while (true) {
-                                            cout << "\n\n-----The " << num_of_iterations << " generation-----" << endl;
-                                            num_of_iterations++;
-                                            int j = 0;
-                                            for (int i = 0; i < procreator_pairs_num[proc_ind]; i++) {
-                                                rand_ch(population, pop_size[pop_size_ind], QAP_size, par_per_it, W, D,
-                                                        &emergency_stop);
-                                                if (emergency_stop) {
-                                                    goto Finished2;
-                                                }
-                                                OX_crossover(par_per_it, ch_per_it, QAP_size, W, D);
-                                                ch[j] = *new progeny(ch_per_it[0]);
-                                                ch[j + 1] = *new progeny(ch_per_it[1]);
-                                                j += 2;
-                                            }
-                                            cout << "\n\nCreated children:" << endl;
-                                            ch->bubblesort(ch, procreator_pairs_num[proc_ind] * 2);
-                                            for (int i = 0; i < procreator_pairs_num[proc_ind] * 2; i++) {
-                                                ch[i].show_gen();
-                                            }
-                                            for (int i = 0; i < procreator_pairs_num[proc_ind] * 2; i++) {
-                                                mut_rand = rand() % 101;
-                                                if (mut_rand <= int(mut_percent * 100)) {
-                                                    cout << "Mutation occured!!!" << endl;
-                                                    ch[i].show_gen();
-                                                    cout << "Changed to..." << endl;
-                                                    dot_mut(ch[i], QAP_size, W, D);
-                                                    ch[i].show_gen();
-                                                }
-                                            }
-                                            overlap(overlap_num(G_coef[G_ind], pop_size[pop_size_ind]), population,
-                                                    pop_size[pop_size_ind], reprod, ch,
-                                                    procreator_pairs_num[proc_ind] * 2,
-                                                    B[0], utopy[ut_ind], utopy_comb_cond[ut_ind_comb]);
-                                            double ret = 100000;
-                                            cout << "\n!!!The new generation is:" << endl;
-                                            population->bubblesort(population, pop_size[pop_size_ind]);
-                                            for (int i = 0; i < pop_size[pop_size_ind]; i++) {
-                                                population[i].show_gen();
-                                                if (population[i].get_cost() <= ret) {
-                                                    ret = population[i].get_cost();
-                                                    best_ind = i;
-                                                }
-                                            }
-                                            if (solution.get_cost() > population[best_ind].get_cost()) {
-                                                solution = *new progeny(population[best_ind]);
-                                            }
-                                            cout << "\n!!!The best in generation is:" << endl;
-                                            population[best_ind].show_gen();
-                                            if (num_of_iterations == (max_stop_cond_val[stop_ind] + 1)) {
-                                                break;
-                                            }
-
-                                        }
-                                        Finished2:
-                                        emergency_stop = false;
-                                        outdata << solution.ret_str_gen() << ";" << solution.get_cost() << endl;
-                                        cout << "\n\n-----The best solution is:" << endl;
-                                        solution.show_gen();
-                                        cout << "And the decoded version is:" << endl;
-                                        num_of_iterations = 1;
-                                        solution.show_decode_gen();
-                                        delete[] reprod;
-                                        delete[] population;
-                                        delete[] ch;
-                                    }
-                                }
+    for(int cros_ind=0; cros_ind<2; cros_ind++){
+        for(int sel_ind=0; sel_ind<4; sel_ind++){
+            for(int procr_ind=0; procr_ind<3; procr_ind++){
+                B[0]=2;
+                B[1]=int(procreator_pairs_num[procr_ind]/1.5);
+                B[2]=procreator_pairs_num[procr_ind];
+                for(int G_ind=0; G_ind<4; G_ind++){
+                    if(sel_ind==2){
+                        G_ind=6;
+                    }
+                    for(int B_ind=0; B_ind<3; B_ind++){
+                        string filename="CR-"+cros_str[cros_ind]+" SL-"+sel_meth[sel_ind];
+                        if(sel_ind==0){
+                            filename+=to_string(B[B_ind]);
                         }
+                        else{
+                            B_ind=5;
+                        }
+                        filename+=" PR-"+to_string(procreator_pairs_num[procr_ind]);
+                        if(sel_ind!=2){
+                            filename+=" GI"+to_string(G_coef[G_ind]);
+                        }
+                        filename+=".png";
+                        plt::clf();
+                        for(int iter=0; iter<5; iter++){
+                            if(sel_ind!=0&&sel_ind!=2){
+                                outdata << "SL-"<< sel_meth[sel_ind]<<" PR-"<< procreator_pairs_num[procr_ind]
+                                        << " GI-" << G_coef[G_ind]<<";";
+                            }
+                            else if(sel_ind==0){
+                                outdata << "SL-"<< sel_meth[sel_ind]<<B[B_ind]<<" PR-"<< procreator_pairs_num[procr_ind]
+                                        << " GI-" << G_coef[G_ind]<<";";
+                            }
+                            else{
+                                outdata << "SL-"<< sel_meth[sel_ind]<<" PR-"<< procreator_pairs_num[procr_ind]<<";";
+                            }
+                            int num_of_iterations=1, ov_num;
+                            ov_num=overlap_num(G_coef[G_ind], pop_size);
+                            progeny *population = new progeny[pop_size];
+                            for (int i = 0; i < pop_size; i++) {
+                                population[i] = progeny(0, QAP_size, NULL, true, W, D);
+                                for (int j = 0; j < i; j++) {
+                                    if (population[j] == population[i]) {
+                                        i--;
+                                        continue;
+                                    }
+                                }
+                            }
+                            double ret = DBL_MAX;
+                            population->bubblesort(population, pop_size);
+                            for (int i = 0; i < pop_size; i++) {
+                                if (population[i].get_cost() <= ret) {
+                                    ret = population[i].get_cost();
+                                    global_ind = i;
+                                }
+                            }
+                            progeny par_per_it[2], ch_per_it[2], solution = progeny(population[global_ind]);
+                            bool emergency_stop=false;
+                            outdata<<iter+1<<";"<<solution.ret_str_gen()<<";"<<solution.get_cost()<<";";
+                            x.push_back(0);
+                            y.push_back(solution.get_cost());
+                            while(true){
+                                progeny *reprod = new progeny[ov_num];
+                                progeny *ch = new progeny[procreator_pairs_num[procr_ind] * 2];
+                                x.push_back(num_of_iterations);
+                                num_of_iterations++;
+                                int j = 0;
+                                for (int i = 0; i < procreator_pairs_num[procr_ind]; i++) {
+                                    rand_ch(population, pop_size, QAP_size, par_per_it, W, D, &emergency_stop);
+                                    if (emergency_stop) {
+                                        x.pop_back();
+                                        delete[] ch;
+                                        delete[] reprod;
+                                        goto Finished;
+                                    }
+                                    crossover(par_per_it, ch_per_it, QAP_size, W, D, cros_b[cros_ind]);
+                                    ch[j] = progeny(ch_per_it[0]);
+                                    ch[j + 1] = progeny(ch_per_it[1]);
+                                    j += 2;
+                                }
+                                ch->bubblesort(ch, procreator_pairs_num[procr_ind] * 2);
+                                overlap(ov_num, population, pop_size, reprod, ch,  procreator_pairs_num[procr_ind] * 2, sel_case[sel_ind], B[B_ind]);
+                                population->bubblesort(population, pop_size);
+                                ret = DBL_MAX;
+                                no_change++;
+                                if (solution.get_cost() > population[pop_size-1].get_cost()) {
+                                    solution = population[pop_size-1];
+                                    no_change = 0;
+                                }
+                                y.push_back(solution.get_cost());
+                                delete[] ch;
+                                delete[] reprod;
+                                if(no_change==no_change_max){
+                                    break;
+                                }
+                            }
+                            Finished:
+                            no_change=0;
+                            plt::named_plot(to_string(iter+1)+" iteration",x,y);
+                            x.clear();
+                            y.clear();
+                            delete[] population;
+                            outdata<<solution.ret_str_gen()<<";"<<solution.get_cost()<<endl;
+                        }
+                        plt::legend();
+                        plt::save("./test1/"+filename);
+                        plt::clf();
+                        cout<<filename<<endl;
                     }
                 }
             }
         }
     }
+    for(int i=0; i<QAP_size; i++){
+        delete[] W[i];
+        delete[] D[i];
+    }
+    delete[] W;
+    delete[] D;
     return 0;
 }

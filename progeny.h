@@ -8,10 +8,11 @@
 #include <string>
 
 class progeny {
-    int generation;
-    int size;
     int *gen;
     double tot_cost;
+protected:
+    int generation;
+    int size;
 public:
     progeny(void);
     progeny(const progeny &p_cop);
@@ -20,6 +21,7 @@ public:
     ~progeny(void);
 
     int& operator[] (int x);
+    progeny& operator=(const progeny &p_);
     bool operator==(const progeny &r);
     bool operator>=(const progeny &r);
 
@@ -31,7 +33,28 @@ public:
     void swap(progeny &p1, progeny &p2);
     void bubblesort(progeny *p, int pop_size);
     std::string ret_str_gen();
+    void ch_cost_mask(int tmp1, int tmp2, double **W, double **D);
 };
 
+class mask:public progeny{
+    bool *gen;
+public:
+    mask(void);
+    mask(int g, int s, bool *gen, bool first);
+    mask(int g, int s, bool *gen):mask(g,s,gen, false){};
+    mask(const mask &m_cop);
+    ~mask(void);
 
+    bool operator==(const mask &r);
+    mask& operator=(const mask &m_);
+    bool& operator[] (int x);
+
+    int first_same_indx(mask inp);
+    int first_ind();
+    int second_ind(int first);
+    void bubblesort(mask *p, int pop_size, progeny sol, double **W, double**D);
+    void swap(mask &p1, mask &p2);
+    std::string ret_str_gen();
+    double get_cost(progeny inp, double **W, double **D);
+};
 #endif //QAP_EGA_PRE_PROGENY_H

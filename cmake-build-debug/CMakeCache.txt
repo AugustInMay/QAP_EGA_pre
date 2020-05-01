@@ -217,6 +217,21 @@ ProcessorCount_cmd_getconf:FILEPATH=/usr/bin/getconf
 //Path to a program.
 ProcessorCount_cmd_sysctl:FILEPATH=/usr/sbin/sysctl
 
+//Path to a program.
+Python2_EXECUTABLE:FILEPATH=/usr/bin/python2.7
+
+//Path to a file.
+Python2_INCLUDE_DIR:PATH=/usr/include/python2.7
+
+//Path to a library.
+Python2_LIBRARY_DEBUG:FILEPATH=Python2_LIBRARY_DEBUG-NOTFOUND
+
+//Path to a library.
+Python2_LIBRARY_RELEASE:FILEPATH=/usr/lib/python2.7/config-x86_64-linux-gnu/libpython2.7.so
+
+//Path to a file.
+Python2_NumPy_INCLUDE_DIR:PATH=/usr/lib/python2.7/dist-packages/numpy/core/include
+
 //Value Computed by CMake
 QAP_ega_pre_BINARY_DIR:STATIC=/home/augustinmay/CLionProjects/QAP_ega_pre/cmake-build-debug
 
@@ -373,8 +388,18 @@ CMAKE_STRIP-ADVANCED:INTERNAL=1
 CMAKE_UNAME:INTERNAL=/usr/bin/uname
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+//Details about finding Python2
+FIND_PACKAGE_MESSAGE_DETAILS_Python2:INTERNAL=[/usr/lib/python2.7/config-x86_64-linux-gnu/libpython2.7.so][/usr/include/python2.7][/usr/lib/python2.7/dist-packages/numpy/core/include][cfound components:  Development NumPy Interpreter ][v2.7.17()]
 //ADVANCED property for variable: ProcessorCount_cmd_getconf
 ProcessorCount_cmd_getconf-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: ProcessorCount_cmd_sysctl
 ProcessorCount_cmd_sysctl-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Python2_EXECUTABLE
+Python2_EXECUTABLE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Python2_INCLUDE_DIR
+Python2_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Python2_LIBRARY_DEBUG
+Python2_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Python2_LIBRARY_RELEASE
+Python2_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
 
