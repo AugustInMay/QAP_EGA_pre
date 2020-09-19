@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <chrono>
 #include "progeny.h"
 #include "selection.h"
 #include "crossover.h"
@@ -12,12 +13,12 @@ namespace plt = matplotlibcpp;
 using namespace std;
 
 int main() {
-    ifstream W_inp("Tai30a_W"), D_inp("Tai30a_D");
+    ifstream W_inp("tho40_W"), D_inp("tho40_D");
     ofstream outdata;
-    outdata.open("Table_t_.csv");
-    outdata<<"Configuration"<<";"<<"Iteration"<<";"<<"The initial way"<<";"<<"Its distance"<<";"<<"The best way after algorithm"<<";"<<"Its distance"<<endl;
+    outdata.open("Table_tho40_.csv");
+    outdata<<"Configuration"<<";"<<"Iteration"<<";"<<"The initial way"<<";"<<"Its distance"<<";"<<"The best way after algorithm"<<";"<<"Its distance"<<";"<<"Time (milliseconds)"<<endl;
     srand(time(NULL));
-    int QAP_size=30, pop_size=100, no_change=0, no_change_max=50, procreator_pairs_num[3]={pop_size/3, pop_size/2, pop_size}, B[3], sel_case[4]={1,2,3,4};
+    int QAP_size=40, pop_size=100, no_change=0, no_change_max=50, procreator_pairs_num[3]={pop_size/3, pop_size/2, pop_size}, B[3], sel_case[4]={1,2,3,4};
     double **W=new double*[QAP_size], **D=new double*[QAP_size];
     string sel_meth[4]={"B", "UT", "UT-C", "R"};
     double G_coef[4]={0.1, 0.2, 0.3, 0.5};
@@ -54,6 +55,7 @@ int main() {
                     filename+=".png";
                     plt::clf();
                     for(int iter=0; iter<5; iter++){
+                        auto t1 = chrono::high_resolution_clock::now();
                         progeny sol(0, QAP_size, nullptr, true, W, D), chng;
                         x.push_back(0);
                         y.push_back(sol.get_cost());
@@ -152,16 +154,19 @@ int main() {
                         x.clear();
                         y.clear();
                         delete[] population;
-                        outdata<<sol.ret_str_gen()<<";"<<sol.get_cost()<<endl;
+                        auto t2 = chrono::high_resolution_clock::now();
+                        auto duration = chrono::duration_cast<chrono::milliseconds>(t2 - t1).count();
+                        outdata<<sol.ret_str_gen()<<";"<<sol.get_cost()<<";"<<duration<<endl;
                     }
                     plt::legend();
-                    plt::save("./test/"+filename);
+                    plt::save("./graphics/"+filename);
                     plt::clf();
                     cout<<filename<<endl;
                 }
             }
         }
     }
+
     for(int i=0; i<QAP_size; i++){
         delete[] W[i];
         delete[] D[i];
